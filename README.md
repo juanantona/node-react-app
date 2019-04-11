@@ -157,7 +157,7 @@ module.exports = {
 ```
 
 1.  **entry:** entry: ./src/client/index.js is where the application starts executing and webpack starts bundling.
-    Note: babel-polyfill is added to support async/await. Read more [here](https://babeljs.io/docs/en/babel-polyfill#usage-in-node-browserify-webpack).
+    Note: babel-polyfill is added to support async/await, Promise, Array.from and more. Read more [here](https://babeljs.io/docs/en/6.26.3/babel-polyfill#usage-in-node-browserify-webpack).
 2.  **output path and filename:** the target directory and the filename for the bundled output
 3.  **module loaders:** Module loaders are transformations that are applied on the source code of a module. We pass all the js file through [babel-loader](https://github.com/babel/babel-loader) to transform JSX to Javascript. CSS files are passed through [css-loaders](https://github.com/webpack-contrib/css-loader) and [style-loaders](https://github.com/webpack-contrib/style-loader) to load and bundle CSS files. Fonts and images are loaded through url-loader.
 4.  **Dev Server:** Configurations for the webpack-dev-server which will be described in coming section.
