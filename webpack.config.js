@@ -2,6 +2,9 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
+// PRODUCTION PLUGINS
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
 const outputDirectory = 'dist';
 
 const filesToProcess = {
@@ -9,6 +12,8 @@ const filesToProcess = {
   sassRegex: /\.(scss|sass)$/,
   assetsRegex: /\.(png|woff|woff2|eot|ttf|svg)$/
 };
+
+const isProductionEnv = process.env.NODE_ENV;
 
 module.exports = {
   // Where the application starts executing and webpack starts bundling
@@ -32,7 +37,9 @@ module.exports = {
     {
       test: filesToProcess.sassRegex,
       use: [
-        'style-loader', // creates style nodes from JS strings
+        isProductionEnv
+          ? MiniCssExtractPlugin.loader // extract the style sheets into a dedicated file
+          : 'style-loader', // 'style-loader', // creates style nodes from JS strings
         'css-loader', // translates CSS into CommonJS. Necessary although there aren't .css files
         'sass-loader' // compiles Sass to CSS, using Node Sass by default
       ]
@@ -64,6 +71,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './public/index.html',
       favicon: './public/favicon.ico'
+    }),
+
+    // PRODUCTION PLUGINS
+    new MiniCssExtractPlugin({
+      filename: 'style.css'
     })
   ]
 };
