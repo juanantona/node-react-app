@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './app.css';
+import './style.scss';
 import ReactImage from './react.png';
 
 export default class App extends Component {
