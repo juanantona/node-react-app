@@ -5,7 +5,9 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 // PRODUCTION PLUGINS
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-const outputDirectory = 'dist';
+const outputDirectory = 'build';
+
+const isProductionEnv = process.env.NODE_ENV;
 
 const filesToProcess = {
   jsRegex: /\.(js|jsx)$/,
@@ -13,9 +15,8 @@ const filesToProcess = {
   assetsRegex: /\.(png|woff|woff2|eot|ttf|svg)$/
 };
 
-const isProductionEnv = process.env.NODE_ENV;
-
 module.exports = {
+  mode: isProductionEnv ? 'production' : 'development',
   // Where the application starts executing and webpack starts bundling
   // 'babel-polyfill': is added to support extended JS features as async/await
   entry: ['babel-polyfill', './src/client/index.js'],
@@ -37,9 +38,11 @@ module.exports = {
     {
       test: filesToProcess.sassRegex,
       use: [
+        // inproduction extract stylesheets into a dedicated file
+        //  outside the bundle.js to avoid render delay
         isProductionEnv
-          ? MiniCssExtractPlugin.loader // extract the style sheets into a dedicated file
-          : 'style-loader', // 'style-loader', // creates style nodes from JS strings
+          ? MiniCssExtractPlugin.loader
+          : 'style-loader', // 'style-loader': creates style nodes from JS strings
         'css-loader', // translates CSS into CommonJS. Necessary although there aren't .css files
         'sass-loader' // compiles Sass to CSS, using Node Sass by default
       ]
