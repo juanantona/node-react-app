@@ -112,7 +112,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 
-const outputDirectory = "dist";
+const outputDirectory = "build";
 
 module.exports = {
   entry: ["babel-polyfill", "./src/client/index.js"],
@@ -207,14 +207,14 @@ const os = require("os");
 
 const app = express();
 
-app.use(express.static("dist"));
+app.use(express.static("build"));
 app.get("/api/getUsername", (req, res) =>
   res.send({ username: os.userInfo().username })
 );
 app.listen(8080, () => console.log("Listening on port 8080!"));
 ```
 
-This starts a server and listens on port 8080 for connections. The app responds with `{username: <username>}` for requests to the URL (/api/getUsername). It is also configured to serve the static files from **dist** directory.
+This starts a server and listens on port 8080 for connections. The app responds with `{username: <username>}` for requests to the URL (/api/getUsername). It is also configured to serve the static files from **build** directory.
 
 ### Concurrently
 
