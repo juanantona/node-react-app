@@ -4,6 +4,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 // PRODUCTION PLUGINS
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const WebpackMd5Hash = require('webpack-md5-hash');
 
 const outputDirectory = 'build';
 
@@ -72,13 +73,21 @@ module.exports = {
     new CleanWebpackPlugin([outputDirectory]),
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
+      inject: false,
+      hash: true,
       template: './public/index.html',
+      filename: 'index.html',
       favicon: './public/favicon.ico'
     }),
 
     // PRODUCTION PLUGINS
+    // MiniCssExtractPlugin: replace extract-text plugin
     new MiniCssExtractPlugin({
-      filename: 'style.css'
-    })
+      filename: 'style.css' // style.[contenthash].css
+    }),
+    // with 'mini-css-extract-plugin' every time you change something in your SCSS,
+    // both .js file and .css output files change hashes
+    // 'webpack-md5-hash' solves it
+    new WebpackMd5Hash()
   ]
 };
