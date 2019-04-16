@@ -4,6 +4,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 // PRODUCTION PLUGINS
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssNanoPostCSSPlugin = require('cssnano');
 const WebpackMd5Hash = require('webpack-md5-hash');
 
 const outputDirectory = 'build';
@@ -45,6 +46,15 @@ module.exports = {
           ? MiniCssExtractPlugin.loader
           : 'style-loader', // 'style-loader': creates style nodes from JS strings
         'css-loader', // translates CSS into CommonJS. Necessary although there aren't .css files
+        // postcss-loader: minify css file by cssnano plugin
+        {
+          loader: 'postcss-loader',
+          options: {
+            plugins: () => [
+              CssNanoPostCSSPlugin()
+            ]
+          }
+        },
         'sass-loader' // compiles Sass to CSS, using Node Sass by default
       ]
     },
