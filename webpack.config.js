@@ -19,8 +19,9 @@ const filesToProcess = {
 
 module.exports = {
   mode: isProductionEnv ? 'production' : 'development',
-  // Where the application starts executing and webpack starts bundling
-  // 'babel-polyfill': is added to support extended JS features as async/await
+  // These are the "entry points" to our application and webpack starts bundling.
+  // This means they will be the "root" imports that are included in JS bundle.
+  // 'babel-polyfill': added to support extended JS features as async/await.
   entry: ['babel-polyfill', './src/client/index.js'],
   // The build folder
   output: {
@@ -30,44 +31,53 @@ module.exports = {
   module: {
     // Following, the rules to be executed by order
     // Loaders: transformations that are applied on the source code of a module
-    rules: [{
-      test: filesToProcess.jsRegex,
-      exclude: /node_modules/,
-      use: {
-        loader: 'babel-loader'
+    rules: [
+      // JS/JSX FILES MANAGEMENT
+      // 'babel-loader'
+      {
+        test: filesToProcess.jsRegex,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader'
+        }
+      },
+      // SASSS FILES MANAGEMENT
+      // The order of the plugins matters.
+      //
+      // 'MiniCssExtractPlugin.loader': extract stylesheets into a
+      // dedicated file outside the main bundle.js to avoid render delay.
+      // 'css-loader': turns CSS into CommonJS (Necessary although there aren't .css files).
+      // 'postcss-loader': minify css file using 'cssnano' plugin.
+      // 'sass-loader': turns sass into css, using 'node-sass' by default
+      {
+        test: filesToProcess.sassRegex,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              plugins: () => [
+                CssNanoPostCSSPlugin()
+              ]
+            }
+          },
+          'sass-loader'
+        ]
+      },
+      // ASSETS MANAGEMENT
+      // 'url-loader': resolves import/require() on a file into a url
+      // and emits the file into the output directory.
+      // In the other hand, transforms files into base64 URIs smaller
+      // than specified limit in bytes as data URLs to avoid requests.
+      {
+        test: filesToProcess.assetsRegex,
+        loader: 'url-loader',
+        options: {
+          limit: 100000
+        }
       }
-    },
-    {
-      test: filesToProcess.sassRegex,
-      use: [
-        // 'MiniCssExtractPlugin.loader': extract stylesheets into a dedicated file
-        // outside the bundle.js to avoid render delay
-        MiniCssExtractPlugin.loader,
-        // 'css-loader': turns CSS into CommonJS.
-        //  Necessary although there aren't .css files
-        'css-loader',
-        // 'postcss-loader': minify css file using cssnano plugin
-        {
-          loader: 'postcss-loader',
-          options: {
-            plugins: () => [
-              CssNanoPostCSSPlugin()
-            ]
-          }
-        },
-        // 'sass-loader': turns sass into css, using Node Sass by default
-        'sass-loader'
-      ]
-    },
-    {
-      // 'url-loader': works like 'file' loader except that it embeds assets
-      // smaller than specified limit in bytes as data URLs to avoid requests.
-      test: filesToProcess.assetsRegex,
-      loader: 'url-loader',
-      options: {
-        limit: 100000
-      }
-    }]
+    ]
   },
   resolve: {
     extensions: ['*', '.js', '.jsx']
@@ -82,7 +92,7 @@ module.exports = {
   plugins: [
     // Remove outputDirectory before a new bundle
     new CleanWebpackPlugin([outputDirectory]),
-    // Generates an `index.html` file with the <script> injected.
+    // Generates an 'index.html' file with the <script> injected.
     new HtmlWebpackPlugin({
       inject: false,
       hash: true,
