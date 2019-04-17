@@ -9,7 +9,7 @@ const WebpackMd5Hash = require('webpack-md5-hash');
 
 const outputDirectory = 'build';
 
-const isProductionEnv = process.env.NODE_ENV;
+const isProductionEnv = process.env.NODE_ENV === 'production';
 
 const filesToProcess = {
   jsRegex: /\.(js|jsx)$/,
@@ -40,13 +40,16 @@ module.exports = {
     {
       test: filesToProcess.sassRegex,
       use: [
-        // inproduction extract stylesheets into a dedicated file
-        //  outside the bundle.js to avoid render delay
+        // in production extract stylesheets into a dedicated file
+        // outside the bundle.js to avoid render delay
         isProductionEnv
           ? MiniCssExtractPlugin.loader
-          : 'style-loader', // 'style-loader': creates style nodes from JS strings
-        'css-loader', // translates CSS into CommonJS. Necessary although there aren't .css files
-        // postcss-loader: minify css file by cssnano plugin
+          // 'style-loader': inject styles into DOM
+          : 'style-loader',
+        // 'css-loader': turns CSS into CommonJS.
+        //  Necessary although there aren't .css files
+        'css-loader',
+        // 'postcss-loader': minify css file using cssnano plugin
         {
           loader: 'postcss-loader',
           options: {
@@ -55,7 +58,8 @@ module.exports = {
             ]
           }
         },
-        'sass-loader' // compiles Sass to CSS, using Node Sass by default
+        // 'sass-loader': turns sass into css, using Node Sass by default
+        'sass-loader'
       ]
     },
     {
