@@ -40,12 +40,9 @@ module.exports = {
     {
       test: filesToProcess.sassRegex,
       use: [
-        // in production extract stylesheets into a dedicated file
+        // 'MiniCssExtractPlugin.loader': extract stylesheets into a dedicated file
         // outside the bundle.js to avoid render delay
-        isProductionEnv
-          ? MiniCssExtractPlugin.loader
-          // 'style-loader': inject styles into DOM
-          : 'style-loader',
+        MiniCssExtractPlugin.loader,
         // 'css-loader': turns CSS into CommonJS.
         //  Necessary although there aren't .css files
         'css-loader',
