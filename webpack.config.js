@@ -30,7 +30,7 @@ module.exports = {
   // The build folder
   output: {
     path: path.join(__dirname, outputDirectory),
-    filename: isProductionEnv ? 'bundle.[contenthash].js' : 'bundle.js'
+    filename: isProductionEnv ? '[name].bundle.[contenthash].js' : '[name].bundle.js'
   },
   // ----------------------------------------------
   // Resolve
@@ -41,6 +41,21 @@ module.exports = {
   // JSX is included as a common component filename extension to support some tools
   resolve: {
     extensions: ['*', '.js', '.jsx']
+  },
+  // ----------------------------------------------
+  // Optimization
+  // ----------------------------------------------
+  optimization: {
+    // Bundle splitting in separated files: main and vendors
+    splitChunks: {
+      chunks: 'all',
+      cacheGroups: {
+        vendors: {
+          name: 'vendors',
+          test: /[\\/]node_modules[\\/]/
+        }
+      }
+    }
   },
   // ----------------------------------------------
   // Module
