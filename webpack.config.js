@@ -26,14 +26,17 @@ module.exports = {
   // The build folder
   output: {
     path: path.join(__dirname, outputDirectory),
-    filename: 'bundle.js'
+    filename: isProductionEnv ? 'bundle.[contenthash].js' : 'bundle.js'
   },
+  // ----------------------------------------------
+  // Module
+  // ----------------------------------------------
   module: {
     // Following, the rules to be executed by order
     // Loaders: transformations that are applied on the source code of a module
     rules: [
       // JS/JSX FILES MANAGEMENT
-      // 'babel-loader'
+      // 'babel-loader': Loads ES2015+ code and transpiles to ES5 using Babel
       {
         test: filesToProcess.jsRegex,
         exclude: /node_modules/,
