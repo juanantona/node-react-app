@@ -32,6 +32,16 @@ module.exports = {
     filename: isProductionEnv ? 'bundle.[contenthash].js' : 'bundle.js'
   },
   // ----------------------------------------------
+  // Resolve
+  // ----------------------------------------------
+  // Configure how modules are resolved: webpack find the module code that needs
+  // to be included in the bundle for every such require/import statement
+  // If the path has not a file extension is resolved using the resolve.extensions
+  // JSX is included as a common component filename extension to support some tools
+  resolve: {
+    extensions: ['*', '.js', '.jsx']
+  },
+  // ----------------------------------------------
   // Module
   // ----------------------------------------------
   module: {
@@ -84,9 +94,6 @@ module.exports = {
         }
       }
     ]
-  },
-  resolve: {
-    extensions: ['*', '.js', '.jsx']
   },
   // ----------------------------------------------
   // Devtool
