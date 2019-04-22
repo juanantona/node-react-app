@@ -19,6 +19,9 @@ const filesToProcess = {
 
 module.exports = {
   mode: isProductionEnv ? 'production' : 'development',
+  // ----------------------------------------------
+  // Entry Points
+  // ----------------------------------------------
   // These are the "entry points" to our application and webpack starts bundling.
   // This means they will be the "root" imports that are included in JS bundle.
   // 'babel-polyfill': added to support extended JS features as async/await.
@@ -51,7 +54,7 @@ module.exports = {
       // dedicated file outside the main bundle.js to avoid render delay.
       // 'css-loader': turns CSS into CommonJS (Necessary although there aren't .css files).
       // 'postcss-loader': minify css file using 'cssnano' plugin.
-      // 'sass-loader': turns sass into css, using 'node-sass' by default
+      // 'sass-loader': Loads and compiles a SASS/SCSS file, using 'node-sass' by default
       {
         test: filesToProcess.sassRegex,
         use: [
@@ -85,6 +88,9 @@ module.exports = {
   resolve: {
     extensions: ['*', '.js', '.jsx']
   },
+  // ----------------------------------------------
+  // Devtool
+  // ----------------------------------------------
   devServer: {
     port: 3000,
     open: true,
@@ -92,13 +98,17 @@ module.exports = {
       '/api': 'http://localhost:8080'
     }
   },
+  // ----------------------------------------------
+  // Plugins
+  // ----------------------------------------------
   plugins: [
     // Remove outputDirectory before a new bundle
     new CleanWebpackPlugin([outputDirectory]),
     // Generates an 'index.html' file with the <script> injected.
+    // this plugin replaces and improves 'html-loader'
     new HtmlWebpackPlugin({
       inject: false,
-      hash: true,
+      hash: isProductionEnv,
       template: './public/index.html',
       filename: 'index.html',
       favicon: './public/favicon.ico'
@@ -107,11 +117,11 @@ module.exports = {
     // PRODUCTION PLUGINS
     // MiniCssExtractPlugin: replace extract-text plugin
     new MiniCssExtractPlugin({
-      filename: 'style.css' // style.[contenthash].css
+      filename: isProductionEnv ? 'style.[contenthash].css' : 'style.css'
     }),
     // with 'mini-css-extract-plugin' every time you change something in your SCSS,
     // both .js file and .css output files change hashes
-    // 'webpack-md5-hash' solves it
+    // 'webpack-md5-hash' solves this
     new WebpackMd5Hash()
   ]
 };
