@@ -14,7 +14,7 @@ const isProductionEnv = process.env.NODE_ENV === 'production';
 const filesToProcess = {
   jsRegex: /\.(js|jsx)$/,
   sassRegex: /\.(scss|sass)$/,
-  assetsRegex: /\.(png|woff|woff2|eot|ttf|svg)$/
+  imageRegex: /\.(svg|png|jpg|gif)$/
 };
 
 module.exports = {
@@ -87,7 +87,7 @@ module.exports = {
       // In the other hand, transforms files into base64 URIs smaller
       // than specified limit in bytes as data URLs to avoid requests.
       {
-        test: filesToProcess.assetsRegex,
+        test: filesToProcess.imageRegex,
         loader: 'url-loader',
         options: {
           limit: 100000
