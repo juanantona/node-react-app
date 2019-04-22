@@ -18,6 +18,7 @@ const filesToProcess = {
 };
 
 module.exports = {
+  // when mode is set to 'production', JS files are minified
   mode: isProductionEnv ? 'production' : 'development',
   // ----------------------------------------------
   // Entry Points
@@ -96,23 +97,13 @@ module.exports = {
     ]
   },
   // ----------------------------------------------
-  // Devtool
-  // ----------------------------------------------
-  devServer: {
-    port: 3000,
-    open: true,
-    proxy: {
-      '/api': 'http://localhost:8080'
-    }
-  },
-  // ----------------------------------------------
   // Plugins
   // ----------------------------------------------
   plugins: [
     // Remove outputDirectory before a new bundle
     new CleanWebpackPlugin([outputDirectory]),
-    // Generates an 'index.html' file with the <script> injected.
-    // this plugin replaces and improves 'html-loader'
+    // Generates an 'index.html' file in output directory based in
+    // template file attribute (replaces and improves 'html-loader')
     new HtmlWebpackPlugin({
       inject: false,
       hash: isProductionEnv,
@@ -122,7 +113,7 @@ module.exports = {
     }),
 
     // PRODUCTION PLUGINS
-    // MiniCssExtractPlugin: replace extract-text plugin
+    // MiniCssExtractPlugin: Extracting CSS into own file (replace extract-text plugin)
     new MiniCssExtractPlugin({
       filename: isProductionEnv ? 'style.[contenthash].css' : 'style.css'
     }),
@@ -130,5 +121,15 @@ module.exports = {
     // both .js file and .css output files change hashes
     // 'webpack-md5-hash' solves this
     new WebpackMd5Hash()
-  ]
+  ],
+  // ----------------------------------------------
+  // Devtool
+  // ----------------------------------------------
+  devServer: {
+    port: 3000,
+    open: true,
+    proxy: {
+      '/api': 'http://localhost:8080'
+    }
+  }
 };
