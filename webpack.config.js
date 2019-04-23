@@ -18,7 +18,6 @@ const filesToProcess = {
 };
 
 module.exports = {
-  // when mode is set to 'production', JS files are minified
   mode: isProductionEnv ? 'production' : 'development',
   // ----------------------------------------------
   // Entry Points
@@ -46,6 +45,8 @@ module.exports = {
   // Optimization
   // ----------------------------------------------
   optimization: {
+    // Minification is 'true' by default in 'production' mode
+    minimize: isProductionEnv,
     // Bundle splitting in separated files: main and vendors
     splitChunks: {
       chunks: 'all',
